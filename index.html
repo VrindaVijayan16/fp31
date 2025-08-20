@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Travel Explore</title>
+  <title>Recipe App (HTML)</title>
   <style>
     body {
       margin: 0;
@@ -11,12 +11,11 @@
       background: #f4f4f4;
     }
     header {
-      background: url("https://th.bing.com/th/id/R.9b81663a3934071f8de09681cec0684e?rik=DEV7m%2bUbPpmL2A&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f08%2fCool-Nature-Background-Images-4523x2590.jpg&ehk=XxAKNdbLqeV84jakVaOYrmZWai83%2bRlxqGS7WF2x2%2bo%3d&risl=1&pid=ImgRaw&r=0")
-        no-repeat center/cover;
-      color: white;
-      padding: 50px 20px;
+      background: #6200ea;
+      color: #fff;
+      padding: 1rem;
       text-align: center;
-      font-size: 28px;
+      font-size: 20px;
       font-weight: bold;
     }
     .page {
@@ -26,130 +25,182 @@
     .active {
       display: block;
     }
+    .list-item {
+      background: #fff;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 12px;
     }
     .card {
-      position: relative;
-      border-radius: 14px;
+      background: #fff;
+      border-radius: 10px;
       overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      transition: transform 0.2s;
+      transition: transform 0.2s ease;
     }
-    .card:hover {
-      transform: scale(1.03);
-    }
+    .card:hover { transform: scale(1.03); }
     .card img {
       width: 100%;
-      height: 150px;
+      height: 140px;
       object-fit: cover;
-      display: block;
     }
-    .card .label {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      padding: 8px;
-      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-      color: white;
+    .card h3 {
+      margin: 8px;
+      font-size: 16px;
       text-align: center;
-      font-weight: bold;
+    }
+    .ingredients {
+      margin-top: 16px;
+    }
+    .ingredients h3 {
+      font-size: 20px;
+    }
+    .ingredients ul {
+      list-style: none;
+      padding: 0;
+    }
+    .ingredients li {
+      background: #fff;
+      margin: 6px 0;
+      padding: 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .back-btn {
       background: #6200ea;
       color: white;
       border: none;
       padding: 8px 14px;
+      margin-bottom: 12px;
       border-radius: 6px;
       cursor: pointer;
-      margin-bottom: 12px;
-    }
-    .detail img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-    .detail p {
-      margin-top: 16px;
-      font-size: 16px;
-      line-height: 1.4;
     }
   </style>
 </head>
 <body>
-  <header>🌍 Tourist Places</header>
+  <header>🍴 Recipe App</header>
 
-  <!-- Home Page -->
-  <div id="homePage" class="page active">
-    <div id="destinationGrid" class="grid"></div>
+  <!-- Category Page -->
+  <div id="homePage" class="page active"></div>
+
+  <!-- Recipe Grid Page -->
+  <div id="gridPage" class="page">
+    <button class="back-btn" onclick="showPage('homePage')">← Back</button>
+    <h2 id="gridTitle"></h2>
+    <div id="recipeGrid" class="grid"></div>
   </div>
 
-  <!-- Detail Page -->
+  <!-- Recipe Detail Page -->
   <div id="detailPage" class="page">
-    <button class="back-btn" onclick="showPage('homePage')">← Back</button>
-    <div class="detail">
-      <h2 id="detailTitle"></h2>
-      <img id="detailImage" src="" alt="">
-      <p id="detailDesc"></p>
+    <button class="back-btn" onclick="showPage('gridPage')">← Back</button>
+    <h2 id="recipeTitle"></h2>
+    <img id="recipeImage" src="" alt="" style="width:100%;border-radius:10px;" />
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul id="ingredientList"></ul>
     </div>
   </div>
 
   <script>
-    const destinations = [
+    // Data (from your Flutter code)
+    const categories = [
       {
-        name: "Paris",
-        image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800",
-        description: "The city of love, known for the Eiffel Tower and rich culture."
+        name: "Italian",
+        recipes: [
+          {
+            name: "Pizza",
+            imageUrl: "https://clipartix.com/wp-content/uploads/2017/07/Pizza-clip-art-2.png",
+            ingredients: ["Flour", "Cheese", "Tomato Sauce"]
+          },
+          {
+            name: "Pasta",
+            imageUrl: "https://images.unsplash.com/photo-1525755662778-989d0524087e",
+            ingredients: ["Pasta", "Olive Oil", "Garlic"]
+          }
+        ]
       },
       {
-        name: "Taj Mahal, Agra",
-        image: "https://images.unsplash.com/photo-1548013146-72479768bada?w=800",
-        description: "One of the Seven Wonders of the World, a symbol of eternal love built by Mughal Emperor Shah Jahan."
-      },
-      {
-        name: "New York",
-        image: "https://static01.nyt.com/images/2012/05/06/nyregion/06BIG_SPAN/BIG-superJumbo.jpg",
-        description: "The city that never sleeps, full of energy and iconic landmarks."
-      },
-      {
-        name: "Goa Beaches",
-        image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
-        description: "Famous for golden beaches, nightlife, Portuguese heritage, and seafood delicacies."
+        name: "Indian",
+        recipes: [
+          {
+            name: "Biryani",
+            imageUrl: "https://www.cubesnjuliennes.com/wp-content/uploads/2020/07/Chicken-Biryani-Recipe.jpg",
+            ingredients: ["Rice", "Chicken", "Spices"]
+          },
+          {
+            name: "Paneer Curry",
+            imageUrl: "https://bing.com/th?id=OSK.a12c3b2b820d32d766ad68ac62004197",
+            ingredients: ["Paneer", "Onion", "Tomato"]
+          }
+        ]
       }
     ];
 
-    const grid = document.getElementById("destinationGrid");
-    const detailPage = document.getElementById("detailPage");
     const homePage = document.getElementById("homePage");
+    const gridPage = document.getElementById("gridPage");
+    const detailPage = document.getElementById("detailPage");
 
-    const detailTitle = document.getElementById("detailTitle");
-    const detailImage = document.getElementById("detailImage");
-    const detailDesc = document.getElementById("detailDesc");
+    const gridTitle = document.getElementById("gridTitle");
+    const recipeGrid = document.getElementById("recipeGrid");
+    const recipeTitle = document.getElementById("recipeTitle");
+    const recipeImage = document.getElementById("recipeImage");
+    const ingredientList = document.getElementById("ingredientList");
+
+    let currentCategory = null;
 
     function showPage(pageId) {
-      [homePage, detailPage].forEach(p => p.classList.remove("active"));
+      [homePage, gridPage, detailPage].forEach(p => p.classList.remove("active"));
       document.getElementById(pageId).classList.add("active");
     }
 
-    function openDetail(dest) {
-      detailTitle.textContent = dest.name;
-      detailImage.src = dest.image;
-      detailDesc.textContent = dest.description;
-      showPage("detailPage");
+    // Load categories
+    categories.forEach(cat => {
+      const item = document.createElement("div");
+      item.className = "list-item";
+      item.innerHTML = `${cat.name} <span>➡️</span>`;
+      item.onclick = () => openCategory(cat);
+      homePage.appendChild(item);
+    });
+
+    function openCategory(cat) {
+      currentCategory = cat;
+      gridTitle.textContent = cat.name;
+      recipeGrid.innerHTML = "";
+      cat.recipes.forEach(r => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `<img src="${r.imageUrl}" alt=""><h3>${r.name}</h3>`;
+        card.onclick = () => openRecipe(r);
+        recipeGrid.appendChild(card);
+      });
+      showPage("gridPage");
     }
 
-    // Load grid
-    destinations.forEach(dest => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `<img src="${dest.image}" alt=""><div class="label">${dest.name}</div>`;
-      card.onclick = () => openDetail(dest);
-      grid.appendChild(card);
-    });
+    function openRecipe(recipe) {
+      recipeTitle.textContent = recipe.name;
+      recipeImage.src = recipe.imageUrl;
+      ingredientList.innerHTML = "";
+      recipe.ingredients.forEach(ing => {
+        const li = document.createElement("li");
+        li.innerHTML = `✔️ ${ing}`;
+        ingredientList.appendChild(li);
+      });
+      showPage("detailPage");
+    }
   </script>
 </body>
 </html>
