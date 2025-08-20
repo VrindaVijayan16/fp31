@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Explore</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+    header {
+      background: url("https://th.bing.com/th/id/R.9b81663a3934071f8de09681cec0684e?rik=DEV7m%2bUbPpmL2A&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f08%2fCool-Nature-Background-Images-4523x2590.jpg&ehk=XxAKNdbLqeV84jakVaOYrmZWai83%2bRlxqGS7WF2x2%2bo%3d&risl=1&pid=ImgRaw&r=0")
+        no-repeat center/cover;
+      color: white;
+      padding: 50px 20px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .page {
+      display: none;
+      padding: 16px;
+    }
+    .active {
+      display: block;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.03);
+    }
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+    }
+    .card .label {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      padding: 8px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      color: white;
+      text-align: center;
+      font-weight: bold;
+    }
+    .back-btn {
+      background: #6200ea;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .detail img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .detail p {
+      margin-top: 16px;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <header>🌍 Tourist Places</header>
+
+  <!-- Home Page -->
+  <div id="homePage" class="page active">
+    <div id="destinationGrid" class="grid"></div>
+  </div>
+
+  <!-- Detail Page -->
+  <div id="detailPage" class="page">
+    <button class="back-btn" onclick="showPage('homePage')">← Back</button>
+    <div class="detail">
+      <h2 id="detailTitle"></h2>
+      <img id="detailImage" src="" alt="">
+      <p id="detailDesc"></p>
+    </div>
+  </div>
+
+  <script>
+    const destinations = [
+      {
+        name: "Paris",
+        image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800",
+        description: "The city of love, known for the Eiffel Tower and rich culture."
+      },
+      {
+        name: "Taj Mahal, Agra",
+        image: "https://images.unsplash.com/photo-1548013146-72479768bada?w=800",
+        description: "One of the Seven Wonders of the World, a symbol of eternal love built by Mughal Emperor Shah Jahan."
+      },
+      {
+        name: "New York",
+        image: "https://static01.nyt.com/images/2012/05/06/nyregion/06BIG_SPAN/BIG-superJumbo.jpg",
+        description: "The city that never sleeps, full of energy and iconic landmarks."
+      },
+      {
+        name: "Goa Beaches",
+        image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+        description: "Famous for golden beaches, nightlife, Portuguese heritage, and seafood delicacies."
+      }
+    ];
+
+    const grid = document.getElementById("destinationGrid");
+    const detailPage = document.getElementById("detailPage");
+    const homePage = document.getElementById("homePage");
+
+    const detailTitle = document.getElementById("detailTitle");
+    const detailImage = document.getElementById("detailImage");
+    const detailDesc = document.getElementById("detailDesc");
+
+    function showPage(pageId) {
+      [homePage, detailPage].forEach(p => p.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
+    }
+
+    function openDetail(dest) {
+      detailTitle.textContent = dest.name;
+      detailImage.src = dest.image;
+      detailDesc.textContent = dest.description;
+      showPage("detailPage");
+    }
+
+    // Load grid
+    destinations.forEach(dest => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<img src="${dest.image}" alt=""><div class="label">${dest.name}</div>`;
+      card.onclick = () => openDetail(dest);
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>
