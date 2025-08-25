@@ -1,121 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recipe App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Book</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #fafafa; }
-    header { background: #ff7043; color: white; padding: 15px; text-align: center; font-size: 22px; font-weight: bold; }
-    .category-list, .recipe-grid { padding: 20px; }
-    .category-item { background: #fff; margin: 10px 0; padding: 15px; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .category-item:hover { background: #ffe0b2; }
-    .recipe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-    .card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer; }
-    .card img { width: 100%; height: 150px; object-fit: cover; }
-    .card-title { padding: 10px; font-size: 16px; text-align: center; font-weight: bold; }
-    .detail-page { padding: 20px; }
-    .back-btn { margin-bottom: 20px; background: #ff7043; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; }
-    ul { padding-left: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.02);
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 1rem;
+    }
+    h2 {
+      margin: 0 0 0.5rem;
+    }
+    ul {
+      padding-left: 1.2rem;
+      margin: 0.5rem 0 0;
+    }
   </style>
 </head>
 <body>
+  <header>
+    <h1>🌍 World Recipe Book</h1>
+  </header>
+  <div class="container" id="recipes"></div>
 
-<header>Recipe App</header>
+  <script>
+    const recipes = [
+      // Italian
+      {name:"Pizza", imageUrl:"https://upload.wikimedia.org/wikipedia/commons/d/d3/Supreme_pizza.jpg", ingredients:["Flour","Cheese","Tomato Sauce","Olives"]},
+      {name:"Pasta", imageUrl:"https://images.unsplash.com/photo-1525755662778-989d0524087e?w=800", ingredients:["Pasta","Olive Oil","Garlic","Parmesan"]},
+      {name:"Lasagna", imageUrl:"https://assets.bonappetit.com/photos/656f48d75b552734225041ba/1:1/w_1600,c_limit/20231120-WEB-Lasanga-6422.jpg", ingredients:["Pasta Sheets","Cheese","Tomato Sauce","Meat"]},
+     
+      {name:"Gnocchi", imageUrl:"https://thefastrecipe.com/wp-content/uploads/2021/04/gnocchi-gorgonzola-recipe.jpg", ingredients:["Potatoes","Flour","Eggs","Parmesan"]},
+     
+      {name:"Tiramisu", imageUrl:"https://sallysbakingaddiction.com/wp-content/uploads/2019/06/homemade-tiramisu-2.jpg", ingredients:["Mascarpone","Coffee","Cocoa Powder","Ladyfingers"]},
 
-<div id="app"></div>
+      // Indian
+      {name:"Biryani", imageUrl:"https://www.cubesnjuliennes.com/wp-content/uploads/2020/07/Chicken-Biryani-Recipe.jpg", ingredients:["Rice","Chicken","Spices","Yogurt"]},
+      {name:"Paneer Curry", imageUrl:"https://sandhyahariharan.co.uk/wp-content/uploads/2022/10/Paneer-Curry-2.jpg", ingredients:["Paneer","Onion","Tomato","Cream"]},
+      {name:"Samosa", imageUrl:"https://www.cookwithmanali.com/wp-content/uploads/2019/08/Samosa-Recipe-500x500.jpg", ingredients:["Flour","Potato","Peas","Spices"]},
+      {name:"Butter Chicken", imageUrl:"https://rasamalaysia.com/wp-content/uploads/2015/07/butter-chicken2.jpg", ingredients:["Chicken","Butter","Tomato","Cream","Spices"]},
+      
+      {name:"Gulab Jamun", imageUrl:"https://farm6.staticflickr.com/5466/16997483540_30fde10989_o.jpg", ingredients:["Milk Powder","Flour","Sugar Syrup","Cardamom"]},
 
-<script>
-  // Data Model
-  const categories = [
-    {
-      name: "Italian",
-      recipes: [
-        { name: "Pizza", imageUrl: "https://www.cicis.com/media/1243/pizza_trad_pepperoni.png", ingredients: ["Flour","Cheese","Tomato Sauce","Olives"] },
-        { name: "Pasta", imageUrl: "https://images.unsplash.com/photo-1525755662778-989d0524087e", ingredients: ["Pasta","Olive Oil","Garlic","Parmesan"] },
-        { name: "Lasagna", imageUrl: "https://www.simplyrecipes.com/thmb/3l1pUPtOS7NuF3OfF4N8G22E2ik=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Lasagna-LEAD-07-3a1888b7a55d4018a9a1947b61e2cbb4.jpg", ingredients: ["Pasta Sheets","Cheese","Tomato Sauce","Meat"] },
-        { name: "Risotto", imageUrl: "https://images.unsplash.com/photo-1621996346565-18a69c8f2995?w=800", ingredients: ["Rice","Parmesan","Butter","White Wine"] },
-        { name: "Gnocchi", imageUrl: "https://images.unsplash.com/photo-1617196039897-29bb2f4ff1a6?w=800", ingredients: ["Potatoes","Flour","Eggs","Parmesan"] },
-        { name: "Bruschetta", imageUrl: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=800", ingredients: ["Bread","Tomatoes","Garlic","Basil"] },
-        { name: "Tiramisu", imageUrl: "https://images.unsplash.com/photo-1604917877931-0288d3b013e5?w=800", ingredients: ["Mascarpone","Coffee","Cocoa Powder","Ladyfingers"] }
-      ]
-    },
-    {
-      name: "Indian",
-      recipes: [
-        { name: "Biryani", imageUrl: "https://www.cubesnjuliennes.com/wp-content/uploads/2020/07/Chicken-Biryani-Recipe.jpg", ingredients: ["Rice","Chicken","Spices","Yogurt"] },
-        { name: "Paneer Curry", imageUrl: "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/07/paneer-butter-masala-recipe.jpg", ingredients: ["Paneer","Onion","Tomato","Cream"] },
-        { name: "Samosa", imageUrl: "https://www.cookwithmanali.com/wp-content/uploads/2019/08/Samosa-Recipe-500x500.jpg", ingredients: ["Flour","Potato","Peas","Spices"] },
-        { name: "Butter Chicken", imageUrl: "https://www.indianhealthyrecipes.com/wp-content/uploads/2021/05/butter-chicken.jpg", ingredients: ["Chicken","Butter","Tomato","Cream","Spices"] },
-        { name: "Dosa", imageUrl: "https://www.cookwithmanali.com/wp-content/uploads/2018/09/Crispy-Dosa-500x500.jpg", ingredients: ["Rice","Urad Dal","Oil","Potato Masala"] },
-        { name: "Gulab Jamun", imageUrl: "https://www.cookwithmanali.com/wp-content/uploads/2017/10/Best-Gulab-Jamun-Recipe.jpg", ingredients: ["Milk Powder","Flour","Sugar Syrup","Cardamom"] },
-        { name: "Chole Bhature", imageUrl: "https://www.cookwithmanali.com/wp-content/uploads/2019/06/Chole-Bhature.jpg", ingredients: ["Chickpeas","Flour","Onion","Tomato","Spices"] }
-      ]
-    },
-    {
-      name: "Chinese",
-      recipes: [
-        { name: "Fried Rice", imageUrl: "https://www.seriouseats.com/thmb/ZfIY7D9KpwnzoYB2h0oJvL3-mFc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/20210222-egg-fried-rice-vicky-wasik-seriouseats-19-b2c688ea144f42d89f0ee1d3ee237249.jpg", ingredients: ["Rice","Egg","Soy Sauce","Vegetables"] },
-        { name: "Spring Rolls", imageUrl: "https://www.recipetineats.com/wp-content/uploads/2018/08/Chinese-Spring-Rolls-2.jpg", ingredients: ["Flour","Cabbage","Carrot","Soy Sauce"] },
-        { name: "Chow Mein", imageUrl: "https://www.simplyrecipes.com/thmb/QQeHESrb80OAJHLzjMbf7Rt2oTg=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Chow-Mein-LEAD-05-446efdc4a01149edb1fc2f6a9916902b.jpg", ingredients: ["Noodles","Soy Sauce","Chicken","Vegetables"] },
-        { name: "Kung Pao Chicken", imageUrl: "https://redhousespice.com/wp-content/uploads/2022/08/kung-pao-chicken-2.jpg", ingredients: ["Chicken","Peanuts","Chili Peppers","Soy Sauce"] },
-        { name: "Dumplings", imageUrl: "https://redhousespice.com/wp-content/uploads/2020/01/Chinese-dumplings-500x500.jpg", ingredients: ["Flour","Pork","Cabbage","Soy Sauce"] },
-        { name: "Hot & Sour Soup", imageUrl: "https://redhousespice.com/wp-content/uploads/2022/09/hot-and-sour-soup-500x500.jpg", ingredients: ["Mushrooms","Tofu","Vinegar","Soy Sauce"] },
-        { name: "Sweet and Sour Pork", imageUrl: "https://redhousespice.com/wp-content/uploads/2017/04/Sweet-and-sour-pork-500x500.jpg", ingredients: ["Pork","Pineapple","Bell Pepper","Sweet-Sour Sauce"] }
-      ]
-    },
-    {
-      name: "Mexican",
-      recipes: [
-        { name: "Tacos", imageUrl: "https://hips.hearstapps.com/hmg-prod/images/beef-tacos-horizontal-1530897196.jpg", ingredients: ["Tortilla","Beef","Cheese","Lettuce"] },
-        { name: "Burrito", imageUrl: "https://hips.hearstapps.com/hmg-prod/images/burrito-horizontal-1530897196.jpg", ingredients: ["Tortilla","Beans","Rice","Chicken"] },
-        { name: "Nachos", imageUrl: "https://hips.hearstapps.com/hmg-prod/images/190208-nachos-horizontal-1549669810.png", ingredients: ["Tortilla Chips","Cheese","Jalapenos","Salsa"] },
-        { name: "Quesadilla", imageUrl: "https://www.simplyrecipes.com/thmb/q0Md6xOwPvF0nA3ip8WQFFQfrTo=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Quesadilla-LEAD-05-62d249b9a44d415784a0d4c63db5f92b.jpg", ingredients: ["Tortilla","Cheese","Chicken","Vegetables"] },
-        { name: "Enchiladas", imageUrl: "https://www.simplyrecipes.com/thmb/21uflV5EpcF3b1dBHKQHn4G03q4=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Enchiladas-LEAD-05-97d32a7ecec44bb69f7f32c7e4a75e21.jpg", ingredients: ["Tortilla","Chicken","Cheese","Salsa"] },
-        { name: "Guacamole", imageUrl: "https://www.simplyrecipes.com/thmb/dU4f2LZAvpDdo8Lojyx7V0k2unE=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Guacamole-LEAD-03-2bfcfa9cbe2c41c6aef385faf96aafdd.jpg", ingredients: ["Avocado","Onion","Tomato","Lime"] },
-        { name: "Churros", imageUrl: "https://www.simplyrecipes.com/thmb/fpBZv49SlXHZz0ZEv-7lFecZk3U=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Churros-LEAD-03-6b4e624b7b7b4a94b2a8712d8a3c79e6.jpg", ingredients: ["Flour","Sugar","Cinnamon","Oil"] }
-      ]
-    }
-  ];
+      // Chinese
+      
+      {name:"Kung Pao Chicken", imageUrl:"https://cafedelites.com/wp-content/uploads/2018/04/Best-Kung-Pao-Chicken-IMAGE-2.jpg", ingredients:["Chicken","Peanuts","Chili Peppers","Soy Sauce"]},
+      {name:"Dumplings", imageUrl:"https://img.buzzfeed.com/video-api-prod/assets/2bce8c3067314d9aaf41d732caf79e6b/FB.jpg", ingredients:["Flour","Pork","Cabbage","Soy Sauce"]},
+      
+      {name:"Sweet and Sour Pork", imageUrl:"https://therecipecritic.com/wp-content/uploads/2021/04/sweetandsourpork.jpg", ingredients:["Pork","Pineapple","Bell Pepper","Sweet-Sour Sauce"]},
 
-  const app = document.getElementById("app");
+     // Mexican
+     
+      {name:"Burrito", imageUrl:"https://upload.wikimedia.org/wikipedia/commons/6/60/Burrito.JPG", ingredients:["Tortilla","Beans","Rice","Chicken"]},
+      
+      
+    ];
 
-  function showCategories() {
-    app.innerHTML = "<div class='category-list'>" +
-      categories.map((c,i) => `<div class='category-item' onclick="showRecipes(${i})">${c.name}</div>`).join("") +
-      "</div>";
-  }
+    const container = document.getElementById("recipes");
 
-  function showRecipes(categoryIndex) {
-    const category = categories[categoryIndex];
-    app.innerHTML = `
-      <div class="recipe-grid">
-        ${category.recipes.map((r,i) => `
-          <div class="card" onclick="showDetail(${categoryIndex}, ${i})">
-            <img src="${r.imageUrl}" alt="${r.name}">
-            <div class="card-title">${r.name}</div>
-          </div>
-        `).join("")}
-      </div>
-      <button class="back-btn" onclick="showCategories()">⬅ Back</button>
-    `;
-  }
-
-  function showDetail(categoryIndex, recipeIndex) {
-    const recipe = categories[categoryIndex].recipes[recipeIndex];
-    app.innerHTML = `
-      <div class="detail-page">
-        <button class="back-btn" onclick="showRecipes(${categoryIndex})">⬅ Back</button>
-        <h2>${recipe.name}</h2>
-        <img src="${recipe.imageUrl}" style="width:100%; max-height:300px; object-fit:cover; border-radius:8px;"/>
-        <h3>Ingredients</h3>
-        <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
-      </div>
-    `;
-  }
-
-  showCategories();
-</script>
-
+    recipes.forEach(r => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${r.imageUrl}" alt="${r.name}">
+        <div class="card-content">
+          <h2>${r.name}</h2>
+          <ul>${r.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  </script>
 </body>
 </html>
