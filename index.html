@@ -3,319 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recipe App (HTML)</title>
+  <title>Recipe App</title>
   <style>
-    :root{
-      --bg:#f6f7fb;
-      --card:#ffffff;
-      --text:#222;
-      --muted:#666;
-      --brand:#6c5ce7;
-      --brand-2:#a29bfe;
-      --shadow:0 6px 18px rgba(0,0,0,.08);
-      --radius:14px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-      color:var(--text);
-      background:var(--bg);
-    }
-    header{
-      position:sticky; top:0; z-index:10;
-      display:flex; align-items:center; gap:10px;
-      padding:16px 18px;
-      background:linear-gradient(115deg,var(--brand),var(--brand-2));
-      color:#fff; box-shadow:var(--shadow);
-    }
-    header .back{
-      display:none; border:0; background:rgba(255,255,255,.2); color:#fff;
-      padding:8px 12px; border-radius:10px; cursor:pointer;
-    }
-    header .title{font-weight:800; letter-spacing:.2px}
-    main{padding:16px; max-width:1100px; margin:0 auto}
-
-    /* page containers */
-    .page{display:none; animation:fade .15s ease}
-    .page.active{display:block}
-    @keyframes fade{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:translateY(0)}}
-
-    /* lists */
-    .list{
-      background:transparent;
-      display:grid; gap:10px;
-    }
-    .tile{
-      display:flex; align-items:center; justify-content:space-between;
-      background:var(--card); border-radius:var(--radius);
-      padding:14px 16px; box-shadow:var(--shadow); cursor:pointer;
-      transition:transform .08s ease;
-    }
-    .tile:hover{transform:translateY(-2px)}
-    .tile .name{font-weight:700; font-size:18px}
-    .tile .chev{opacity:.6}
-
-    /* grid of recipes */
-    .grid{
-      display:grid; gap:12px;
-      grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
-    }
-    .card{
-      background:var(--card); border-radius:var(--radius);
-      overflow:hidden; box-shadow:var(--shadow); cursor:pointer;
-      display:flex; flex-direction:column; transition:transform .08s ease;
-    }
-    .card:hover{transform:translateY(-2px)}
-    .card img{width:100%; height:150px; object-fit:cover; display:block}
-    .card .label{padding:10px 12px; font-weight:600}
-
-    /* detail */
-    .detail{
-      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-    .detail img{width:100%; height:260px; object-fit:cover; display:block}
-    .detail .content{padding:16px}
-    .section-title{font-size:18px; font-weight:800; margin:10px 0 6px}
-    .ingredients{list-style:none; padding:0; margin:0}
-    .ingredients li{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 0; border-bottom:1px solid #eee; color:var(--muted)
-    }
-    .ingredients li:last-child{border-bottom:0}
-    .pill{
-      display:inline-flex; align-items:center; justify-content:center;
-      width:26px; height:26px; border-radius:50%;
-      background:rgba(108,92,231,.12); color:var(--brand); font-weight:800;
-      flex:0 0 26px;
-    }
-
-    /* helper */
-    .spacer{height:10px}
-    .muted{color:var(--muted)}
-    .btn{
-      border:0; background:var(--brand); color:#fff; padding:10px 14px;
-      border-radius:10px; cursor:pointer; box-shadow:var(--shadow)
-    }
+    body { font-family: Arial, sans-serif; margin: 0; background: #fafafa; }
+    header { background: #ff7043; color: white; padding: 15px; text-align: center; font-size: 22px; font-weight: bold; }
+    .category-list, .recipe-grid { padding: 20px; }
+    .category-item { background: #fff; margin: 10px 0; padding: 15px; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .category-item:hover { background: #ffe0b2; }
+    .recipe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+    .card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer; }
+    .card img { width: 100%; height: 150px; object-fit: cover; }
+    .card-title { padding: 10px; font-size: 16px; text-align: center; font-weight: bold; }
+    .detail-page { padding: 20px; }
+    .back-btn { margin-bottom: 20px; background: #ff7043; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; }
+    ul { padding-left: 20px; }
   </style>
 </head>
 <body>
-  <header>
-    <button id="backBtn" class="back" aria-label="Go back">← Back</button>
-    <div class="title" id="appTitle">Recipe App</div>
-  </header>
 
-  <main>
-    <!-- Page: Categories -->
-    <section id="pageCategories" class="page active" aria-labelledby="appTitle">
-      <div id="categoryList" class="list"></div>
-    </section>
+<header>Recipe App</header>
 
-    <!-- Page: Recipes Grid (within a category) -->
-    <section id="pageGrid" class="page" aria-label="Recipes">
-      <div class="spacer"></div>
-      <div id="recipeGrid" class="grid"></div>
-    </section>
+<div id="app"></div>
 
-    <!-- Page: Recipe Detail -->
-    <section id="pageDetail" class="page" aria-label="Recipe detail">
-      <div class="detail">
-        <img id="detailImage" src="" alt="">
-        <div class="content">
-          <h2 id="detailName"></h2>
-          <div class="muted" id="detailCategory"></div>
+<script>
+  // Data Model
+  const categories = [
+    {
+      name: "Italian",
+      recipes: [
+        { name: "Pizza", imageUrl: "https://www.cicis.com/media/1243/pizza_trad_pepperoni.png", ingredients: ["Flour","Cheese","Tomato Sauce","Olives"] },
+        { name: "Pasta", imageUrl: "https://images.unsplash.com/photo-1525755662778-989d0524087e", ingredients: ["Pasta","Olive Oil","Garlic","Parmesan"] },
+        { name: "Lasagna", imageUrl: "https://www.simplyrecipes.com/thmb/3l1pUPtOS7NuF3OfF4N8G22E2ik=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Lasagna-LEAD-07-3a1888b7a55d4018a9a1947b61e2cbb4.jpg", ingredients: ["Pasta Sheets","Cheese","Tomato Sauce","Meat"] },
+        { name: "Risotto", imageUrl: "https://images.unsplash.com/photo-1621996346565-18a69c8f2995?w=800", ingredients: ["Rice","Parmesan","Butter","White Wine"] },
+        { name: "Gnocchi", imageUrl: "https://images.unsplash.com/photo-1617196039897-29bb2f4ff1a6?w=800", ingredients: ["Potatoes","Flour","Eggs","Parmesan"] },
+        { name: "Bruschetta", imageUrl: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=800", ingredients: ["Bread","Tomatoes","Garlic","Basil"] },
+        { name: "Tiramisu", imageUrl: "https://images.unsplash.com/photo-1604917877931-0288d3b013e5?w=800", ingredients: ["Mascarpone","Coffee","Cocoa Powder","Ladyfingers"] }
+      ]
+    },
+    {
+      name: "Indian",
+      recipes: [
+        { name: "Biryani", imageUrl: "https://www.cubesnjuliennes.com/wp-content/uploads/2020/07/Chicken-Biryani-Recipe.jpg", ingredients: ["Rice","Chicken","Spices","Yogurt"] },
+        { name: "Paneer Curry", imageUrl: "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/07/paneer-butter-masala-recipe.jpg", ingredients: ["Paneer","Onion","Tomato","Cream"] },
+        { name: "Samosa", imageUrl: "https://www.cookwithmanali.com/wp-content/uploads/2019/08/Samosa-Recipe-500x500.jpg", ingredients: ["Flour","Potato","Peas","Spices"] },
+        { name: "Butter Chicken", imageUrl: "https://www.indianhealthyrecipes.com/wp-content/uploads/2021/05/butter-chicken.jpg", ingredients: ["Chicken","Butter","Tomato","Cream","Spices"] },
+        { name: "Dosa", imageUrl: "https://www.cookwithmanali.com/wp-content/uploads/2018/09/Crispy-Dosa-500x500.jpg", ingredients: ["Rice","Urad Dal","Oil","Potato Masala"] },
+        { name: "Gulab Jamun", imageUrl: "https://www.cookwithmanali.com/wp-content/uploads/2017/10/Best-Gulab-Jamun-Recipe.jpg", ingredients: ["Milk Powder","Flour","Sugar Syrup","Cardamom"] },
+        { name: "Chole Bhature", imageUrl: "https://www.cookwithmanali.com/wp-content/uploads/2019/06/Chole-Bhature.jpg", ingredients: ["Chickpeas","Flour","Onion","Tomato","Spices"] }
+      ]
+    },
+    {
+      name: "Chinese",
+      recipes: [
+        { name: "Fried Rice", imageUrl: "https://www.seriouseats.com/thmb/ZfIY7D9KpwnzoYB2h0oJvL3-mFc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/20210222-egg-fried-rice-vicky-wasik-seriouseats-19-b2c688ea144f42d89f0ee1d3ee237249.jpg", ingredients: ["Rice","Egg","Soy Sauce","Vegetables"] },
+        { name: "Spring Rolls", imageUrl: "https://www.recipetineats.com/wp-content/uploads/2018/08/Chinese-Spring-Rolls-2.jpg", ingredients: ["Flour","Cabbage","Carrot","Soy Sauce"] },
+        { name: "Chow Mein", imageUrl: "https://www.simplyrecipes.com/thmb/QQeHESrb80OAJHLzjMbf7Rt2oTg=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Chow-Mein-LEAD-05-446efdc4a01149edb1fc2f6a9916902b.jpg", ingredients: ["Noodles","Soy Sauce","Chicken","Vegetables"] },
+        { name: "Kung Pao Chicken", imageUrl: "https://redhousespice.com/wp-content/uploads/2022/08/kung-pao-chicken-2.jpg", ingredients: ["Chicken","Peanuts","Chili Peppers","Soy Sauce"] },
+        { name: "Dumplings", imageUrl: "https://redhousespice.com/wp-content/uploads/2020/01/Chinese-dumplings-500x500.jpg", ingredients: ["Flour","Pork","Cabbage","Soy Sauce"] },
+        { name: "Hot & Sour Soup", imageUrl: "https://redhousespice.com/wp-content/uploads/2022/09/hot-and-sour-soup-500x500.jpg", ingredients: ["Mushrooms","Tofu","Vinegar","Soy Sauce"] },
+        { name: "Sweet and Sour Pork", imageUrl: "https://redhousespice.com/wp-content/uploads/2017/04/Sweet-and-sour-pork-500x500.jpg", ingredients: ["Pork","Pineapple","Bell Pepper","Sweet-Sour Sauce"] }
+      ]
+    },
+    {
+      name: "Mexican",
+      recipes: [
+        { name: "Tacos", imageUrl: "https://hips.hearstapps.com/hmg-prod/images/beef-tacos-horizontal-1530897196.jpg", ingredients: ["Tortilla","Beef","Cheese","Lettuce"] },
+        { name: "Burrito", imageUrl: "https://hips.hearstapps.com/hmg-prod/images/burrito-horizontal-1530897196.jpg", ingredients: ["Tortilla","Beans","Rice","Chicken"] },
+        { name: "Nachos", imageUrl: "https://hips.hearstapps.com/hmg-prod/images/190208-nachos-horizontal-1549669810.png", ingredients: ["Tortilla Chips","Cheese","Jalapenos","Salsa"] },
+        { name: "Quesadilla", imageUrl: "https://www.simplyrecipes.com/thmb/q0Md6xOwPvF0nA3ip8WQFFQfrTo=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Quesadilla-LEAD-05-62d249b9a44d415784a0d4c63db5f92b.jpg", ingredients: ["Tortilla","Cheese","Chicken","Vegetables"] },
+        { name: "Enchiladas", imageUrl: "https://www.simplyrecipes.com/thmb/21uflV5EpcF3b1dBHKQHn4G03q4=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Enchiladas-LEAD-05-97d32a7ecec44bb69f7f32c7e4a75e21.jpg", ingredients: ["Tortilla","Chicken","Cheese","Salsa"] },
+        { name: "Guacamole", imageUrl: "https://www.simplyrecipes.com/thmb/dU4f2LZAvpDdo8Lojyx7V0k2unE=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Guacamole-LEAD-03-2bfcfa9cbe2c41c6aef385faf96aafdd.jpg", ingredients: ["Avocado","Onion","Tomato","Lime"] },
+        { name: "Churros", imageUrl: "https://www.simplyrecipes.com/thmb/fpBZv49SlXHZz0ZEv-7lFecZk3U=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Churros-LEAD-03-6b4e624b7b7b4a94b2a8712d8a3c79e6.jpg", ingredients: ["Flour","Sugar","Cinnamon","Oil"] }
+      ]
+    }
+  ];
 
-          <div class="section-title">Ingredients</div>
-          <ul id="detailIngredients" class="ingredients"></ul>
-        </div>
+  const app = document.getElementById("app");
+
+  function showCategories() {
+    app.innerHTML = "<div class='category-list'>" +
+      categories.map((c,i) => `<div class='category-item' onclick="showRecipes(${i})">${c.name}</div>`).join("") +
+      "</div>";
+  }
+
+  function showRecipes(categoryIndex) {
+    const category = categories[categoryIndex];
+    app.innerHTML = `
+      <div class="recipe-grid">
+        ${category.recipes.map((r,i) => `
+          <div class="card" onclick="showDetail(${categoryIndex}, ${i})">
+            <img src="${r.imageUrl}" alt="${r.name}">
+            <div class="card-title">${r.name}</div>
+          </div>
+        `).join("")}
       </div>
-    </section>
-  </main>
+      <button class="back-btn" onclick="showCategories()">⬅ Back</button>
+    `;
+  }
 
-  <script>
-    // --- Data (mirrors your Flutter lists) ---
-    const categories = [
-      {
-        name: "Italian",
-        recipes: [
-          {
-            name: "Pizza",
-            imageUrl: "https://www.cicis.com/media/1243/pizza_trad_pepperoni.png",
-            ingredients: ["Flour", "Cheese", "Tomato Sauce", "Olives"],
-          },
-          {
-            name: "Pasta",
-            imageUrl: "https://images.unsplash.com/photo-1525755662778-989d0524087e",
-            ingredients: ["Pasta", "Olive Oil", "Garlic", "Parmesan"],
-          },
-          {
-            name: "Lasagna",
-            imageUrl: "https://www.simplyrecipes.com/thmb/3l1pUPtOS7NuF3OfF4N8G22E2ik=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Lasagna-LEAD-07-3a1888b7a55d4018a9a1947b61e2cbb4.jpg",
-            ingredients: ["Pasta Sheets", "Cheese", "Tomato Sauce", "Meat"],
-          },
-        ],
-      },
-      {
-        name: "Indian",
-        recipes: [
-          {
-            name: "Biryani",
-            imageUrl: "https://www.cubesnjuliennes.com/wp-content/uploads/2020/07/Chicken-Biryani-Recipe.jpg",
-            ingredients: ["Rice", "Chicken", "Spices", "Yogurt"],
-          },
-          {
-            name: "Paneer Curry",
-            imageUrl: "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/07/paneer-butter-masala-recipe.jpg",
-            ingredients: ["Paneer", "Onion", "Tomato", "Cream"],
-          },
-          {
-            name: "Samosa",
-            imageUrl: "https://www.cookwithmanali.com/wp-content/uploads/2019/08/Samosa-Recipe-500x500.jpg",
-            ingredients: ["Flour", "Potato", "Peas", "Spices"],
-          },
-        ],
-      },
-      {
-        name: "Chinese",
-        recipes: [
-          {
-            name: "Fried Rice",
-            imageUrl: "https://www.seriouseats.com/thmb/ZfIY7D9KpwnzoYB2h0oJvL3-mFc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/20210222-egg-fried-rice-vicky-wasik-seriouseats-19-b2c688ea144f42d89f0ee1d3ee237249.jpg",
-            ingredients: ["Rice", "Egg", "Soy Sauce", "Vegetables"],
-          },
-          {
-            name: "Spring Rolls",
-            imageUrl: "https://www.recipetineats.com/wp-content/uploads/2018/08/Chinese-Spring-Rolls-2.jpg",
-            ingredients: ["Flour", "Cabbage", "Carrot", "Soy Sauce"],
-          },
-          {
-            name: "Chow Mein",
-            imageUrl: "https://www.simplyrecipes.com/thmb/QQeHESrb80OAJHLzjMbf7Rt2oTg=/1777x1333/smart/filters:no_upscale()/Simply-Recipes-Chow-Mein-LEAD-05-446efdc4a01149edb1fc2f6a9916902b.jpg",
-            ingredients: ["Noodles", "Soy Sauce", "Chicken", "Vegetables"],
-          },
-        ],
-      },
-      {
-        name: "Mexican",
-        recipes: [
-          {
-            name: "Tacos",
-            imageUrl: "https://hips.hearstapps.com/hmg-prod/images/beef-tacos-horizontal-1530897196.jpg",
-            ingredients: ["Tortilla", "Beef", "Cheese", "Lettuce"],
-          },
-          {
-            name: "Burrito",
-            imageUrl: "https://hips.hearstapps.com/hmg-prod/images/burrito-horizontal-1530897196.jpg",
-            ingredients: ["Tortilla", "Beans", "Rice", "Chicken"],
-          },
-          {
-            name: "Nachos",
-            imageUrl: "https://hips.hearstapps.com/hmg-prod/images/190208-nachos-horizontal-1549669810.png",
-            ingredients: ["Tortilla Chips", "Cheese", "Jalapenos", "Salsa"],
-          },
-        ],
-      },
-    ];
+  function showDetail(categoryIndex, recipeIndex) {
+    const recipe = categories[categoryIndex].recipes[recipeIndex];
+    app.innerHTML = `
+      <div class="detail-page">
+        <button class="back-btn" onclick="showRecipes(${categoryIndex})">⬅ Back</button>
+        <h2>${recipe.name}</h2>
+        <img src="${recipe.imageUrl}" style="width:100%; max-height:300px; object-fit:cover; border-radius:8px;"/>
+        <h3>Ingredients</h3>
+        <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
+      </div>
+    `;
+  }
 
-    // --- Element refs ---
-    const pageCategories = document.getElementById('pageCategories');
-    const pageGrid = document.getElementById('pageGrid');
-    const pageDetail = document.getElementById('pageDetail');
-    const backBtn = document.getElementById('backBtn');
-    const appTitle = document.getElementById('appTitle');
+  showCategories();
+</script>
 
-    const categoryList = document.getElementById('categoryList');
-    const recipeGrid = document.getElementById('recipeGrid');
-
-    const detailImage = document.getElementById('detailImage');
-    const detailName = document.getElementById('detailName');
-    const detailCategory = document.getElementById('detailCategory');
-    const detailIngredients = document.getElementById('detailIngredients');
-
-    // --- Navigation state ---
-    let stack = []; // 'categories' | {categoryIdx} | {categoryIdx, recipeIdx}
-
-    function setActive(page){
-      [pageCategories, pageGrid, pageDetail].forEach(p => p.classList.remove('active'));
-      page.classList.add('active');
-
-      // Show back button when not on root
-      backBtn.style.display = stack.length ? 'inline-block' : 'none';
-    }
-
-    backBtn.addEventListener('click', () => {
-      stack.pop();
-      if (!stack.length) { // back to categories
-        appTitle.textContent = 'Recipe App';
-        setActive(pageCategories);
-      } else if (typeof stack.at(-1) === 'object' && 'categoryIdx' in stack.at(-1) && !('recipeIdx' in stack.at(-1))) {
-        const { categoryIdx } = stack.at(-1);
-        openCategory(categoryIdx, false);
-      } else if (typeof stack.at(-1) === 'object' && 'categoryIdx' in stack.at(-1) && 'recipeIdx' in stack.at(-1)) {
-        const { categoryIdx, recipeIdx } = stack.at(-1);
-        openRecipe(categoryIdx, recipeIdx, false);
-      }
-    });
-
-    // --- Renderers ---
-    function renderCategories(){
-      categoryList.innerHTML = '';
-      categories.forEach((cat, i) => {
-        const row = document.createElement('div');
-        row.className = 'tile';
-        row.innerHTML = `
-          <div class="name">${cat.name}</div>
-          <div class="chev">›</div>
-        `;
-        row.onclick = () => openCategory(i, true);
-        categoryList.appendChild(row);
-      });
-    }
-
-    function openCategory(categoryIdx, push=true){
-      const cat = categories[categoryIdx];
-      recipeGrid.innerHTML = '';
-      appTitle.textContent = cat.name;
-
-      cat.recipes.forEach((r, j) => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <img loading="lazy" src="${r.imageUrl}" alt="${r.name}" onerror="this.src='https://via.placeholder.com/600x400?text=Image+unavailable'"/>
-          <div class="label">${r.name}</div>
-        `;
-        card.onclick = () => openRecipe(categoryIdx, j, true);
-        recipeGrid.appendChild(card);
-      });
-
-      if (push) stack.push({categoryIdx});
-      setActive(pageGrid);
-    }
-
-    function openRecipe(categoryIdx, recipeIdx, push=true){
-      const cat = categories[categoryIdx];
-      const r = cat.recipes[recipeIdx];
-
-      detailImage.src = r.imageUrl;
-      detailImage.alt = r.name;
-      detailName.textContent = r.name;
-      detailCategory.textContent = cat.name;
-
-      detailIngredients.innerHTML = '';
-      r.ingredients.forEach((ing, i) => {
-        const li = document.createElement('li');
-        li.innerHTML = `<span class="pill">${i+1}</span> <span>${ing}</span>`;
-        detailIngredients.appendChild(li);
-      });
-
-      if (push) stack.push({categoryIdx, recipeIdx});
-      setActive(pageDetail);
-    }
-
-    // init
-    renderCategories();
-    setActive(pageCategories);
-  </script>
 </body>
 </html>
